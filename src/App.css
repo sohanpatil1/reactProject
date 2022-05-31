@@ -1,0 +1,22 @@
+// add all CSS here!
+
+main {
+  
+}
+#imageContents{
+	display: flex;
+	flex-direction: column;
+	width: 393px;
+	height: 253px;
+}
+#alwaysShown{
+	display:flex;
+	flex-direction: row;
+}
+#colContent{
+	display: flex;
+	flex-direction: column;
+}
+button#greenButton {
+  background-color: red;
+}
