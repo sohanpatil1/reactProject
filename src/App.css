@@ -17,6 +17,18 @@ main {
 	display: flex;
 	flex-direction: column;
 }
-button#greenButton {
-  background-color: red;
+input#greenButton {
+  background-color: rgb(66,145,152);
+	width: 152px;
+	height: 42px;
+	border-radius : 7px;
+	color: white;
+}
+#lowerPart{
+	margin-top: 110px;
+	display: flex;
+	flex-direction: row;
+}
+#lowerText{
+	margin-top:50px;
 }

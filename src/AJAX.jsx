@@ -1,7 +1,5 @@
 'use strict'
 
-//SOHAN - Added this file for serving get and post requests. This file will be imported by files that would need these requests.
-
 // Assume data is sent and responses come back as JSON
 // Both are wrappers for built-in async function fetch
 // Checks response.status (using response.ok) 
@@ -16,17 +14,17 @@ async function sendGetRequest(url) {
   console.log(params);
   
   let response = await fetch(url,params);
+	console.log(response)
   if (response.ok) {
     let data = await response.json();
+		
     return data;
   } else {
     throw Error(response.status);
   }
-
-  console.log("received response");
 }
 
-// send a POST request
+// send a POST request with data = [month,date]
 async function sendPostRequest(url,data) {
   let params = {
     method: 'POST', 
@@ -43,7 +41,6 @@ async function sendPostRequest(url,data) {
   } else {
     throw Error(response.status);
   }
-  console.log("received response");
 }
 
 export {sendGetRequest, sendPostRequest};
