@@ -2,27 +2,59 @@ import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
 import MonthPicker from './MonthPicker';
-import {sendGetRequest, sendPostRequest} from './AJAX.jsx'
+import { sendPostRequest } from './AJAX.jsx'
+
+import { Bar } from "react-chartjs-2";
+import Chart from 'chart.js/auto';
 
 
+let tempM; 
+let tempY;
 
 function App() {
   const [shown, setVisibility] = useState(false);	//Shown : Variable if shown, setVisibility() : Show if needed
+  const [date, setDate] = useState({year:2022, month:5});
   //let dis = "show";
-	function showText() {
+	async function showLower() {
 	  console.log("Button Clicked")
-		if(shown == true)//showing upper
+		if(shown == true)//Currently Visible
 		{
-			setVisibility(false);
+			setVisibility(false);	//Make it invisible
 			console.log("Shown in true")
 		}
-    else{
-			setVisibility(true);
-      //dis = "none"
+    else{	//Currently Invisible
+			setVisibility(true);	//Make it visible
+			console.log("Doing AJAX request");
+      // tempM = date.month;
+      // tempY = date.year;
+      // let t = {year:tempY, month:tempM};
+      // let waterData = await sendPostRequest("query/getCDECData", date);
+      //display the data with chart		
 		}
   }
-	useEffect(gettingRequest);
-  //if(shown){
+  /*async function showLower() {
+	  console.log("Button Clicked")
+		if(shown == true)//Currently Visible
+		{
+      console.log()
+			setVisibility(false);	//Make it invisible
+			console.log("Shown in true")
+		}
+    else{	//Currently Invisible
+			setVisibility(true);	//Make it visible
+			// gettingRequest(month,date);	//Retrieve month-date from table
+			
+		}
+  }*/
+	// useEffect(gettingRequest)
+
+  function newYear(y){
+    setDate({year:y, month:(date.month)});
+  }
+  function newMonth(m){
+    setDate({year:(date.year), month:m});
+  }
+
 	return( //Change to shows upper and lower part
 		<main>
 			<div id="alwaysShown">
@@ -34,7 +66,7 @@ function App() {
 					California's water managers monitor the reservoirs carefully, and the state publishes daily data on reservoir storage.
   			</p>
 				<div id="buttonDiv">
-					<input type="submit" id="greenButton" onClick={showText} value={ shown? "See Less" : "See More"}/>
+					<input type="submit" id="greenButton" onClick={showLower} value={ shown? "See Less" : "See More"}/>
 				</div>	
 					
 			</div>
@@ -43,22 +75,127 @@ function App() {
 					Lake Oroville in the 2012-2014 drought. Image credit Justin Sullivan, from The Atlatic article Dramatic Photos of California's Historic Drought.
 				</div>
 			</div>
-			<div id="lowerPart" style={{ display: shown ? "inline" : "none" }}>
+			<div id="lowerPart" style={{ display: shown ? "block" : "none" }}>
 				<div id="chartSpace">
 					Chart Comes here
+          IDK about this : canvas id="myChart" width="400" height="400" canvas
+					<SchoolDisplay/>
 				</div>
 				<p id="lowerText">
 				Here's a quick look at some of the data on reservoirs from the <a href="https://cdec.water.ca.gov/index.html">California Data Exchange Center</a>, which consolidates climate and water data from multiple federal and state government agencies, and  electric utilities.  Select a month and year to see storage levels in the eleven largest in-state reservoirs.
 				</p>
+        <MonthPicker date={date} yearFun={newYear} monthFun={newMonth} />
 			</div> 
     </main>
 		);
 }
-function gettingRequest(month,date){
-	(async function () {
-	      console.log("Doing AJAX request")
-	      let content = await sendPostRequest("query/getCDECData",[month,date]);
-				console.log(content)
-	    }) ();
+
+function SchoolDisplay() {
+
+  console.log("in SchoolDisplay");
+
+  // static var will contain the list of schools
+  const [schools, setSchools] = useState(false);
+
+  // call the custom fetch hook, passing it the callback functions that it can use
+	let month = 5;
+	let year = 2023;
+	sendPostRequest("query/getCDECData", {"month": month,"year":year});
+  
+
+  function thenFun (result) {
+    setSchools(result);
+    // render the list once we have it
+  }
+
+  function catchFun (error) {
+    console.log(error);
+  }
+
+  // will re-render once state variable schools changes
+  if (schools) {
+  return (
+    <main>
+      <SchoolChart schools={schools}> </SchoolChart>
+    </main>
+  )
+  } else {
+    return (<p>
+      loading...
+    </p>);
+  }
+
 }
+
+
+function SchoolChart(props) {
+  const nicknames = new Map();
+  nicknames.set(0, 'Shasta');
+  nicknames.set(1, 'Oroville');
+  nicknames.set(2, 'Trinity Lake');
+	nicknames.set(3, 'New Melones');
+	nicknames.set(4, 'San Luis');
+	nicknames.set(5, 'Don Pedro');
+	nicknames.set(6, 'Berryessa');
+  
+  if (props.schools) {
+    let n = props.schools.length;
+    console.log(props.schools);
+
+    // objects containing row values
+    let stickerObj = {label: "Total Volume",data: [], backgroundColor: ["cyan"]}
+    let midIncObj = {label: "Current Volume", data: [], backgroundColor: ["green"]}
+    let labels = [];
+    for (let i=0; i<n; i++) {
+      stickerObj.data.push(props.schools[i].sticker);
+      midIncObj.data.push(props.schools[i].midIncome);
+      labels.push(nicknames.get(i));
+    }
+  let userData = {};
+  userData.labels = labels;
+  userData.datasets = [stickerObj, midIncObj];
+
+console.log(userData);
+let options = {
+  plugins: {
+    title: {
+      display: false,
+      text: 'Sticker vs. Middle Income Family Prices',
+    },
+    tooltip: {
+      enabled: true
+    },
+    legend: {
+      display: false
+    }
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  scales: {
+    x: {
+      grid: {
+        display: false
+      },
+			stacked:true
+    },
+    y: {
+			stacked:true,
+      grid: {
+        display: false
+      }
+    }
+  }
+};
+      return (
+        <div id="chart-container">
+          <Bar options={options} data={userData} />
+					Chart Container
+        </div>
+      )
+  }
+}
+
+// A component that fetches its own data
+
+
 export default App;

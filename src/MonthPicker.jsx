@@ -1,28 +1,35 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 // an third-party component from NPM
-//import MonthYearPicker from 'react-month-year-picker';
+import MonthYearPicker from 'react-month-year-picker';
 
+let mm = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 function MonthPicker(props) {
-let date = props.date;
+  console.log("recieved");
+  let date = props.date;
 
-const [visible,updateVisible] = useState(false);
+  const [visible,updateVisible] = useState(false);
 
-function showFun () {
-  updateVisible(true);
-}
+  function showFun () {
+    updateVisible(true);
+  }
 
-function pickedYear (year) {
-  updateVisible(false);
-  props.yearFun(year);
-}
+  function pickedYear (year) {
+    updateVisible(false);
+    props.yearFun(year);
+  }
 
-function pickedMonth (month) {
-  updateVisible(false);
-  props.monthFun(month);
-}
+  function pickedMonth (month) {
+    updateVisible(false);
+    props.monthFun(month);
+  }
 
+	function fetchData(){
+		useEffect(()=>{
+			
+		},[]);
+	}
   if (visible) {
-return (
+  return (
       <div id="monthDiv">
         <MonthYearPicker
           caption=""
@@ -32,12 +39,21 @@ return (
           maxYear={2022}
           onChangeYear = {pickedYear}
           onChangeMonth = {pickedMonth}
+					onClick = {fetchData}
         />
       </div> );
-  } else {
-    return (
-      <button onClick={showFun}>{date.month+"/"+date.year}</button>
+  } 
+  else {
+    if(date.month==10 || date.month==11 || date.month==12){
+      return (
+      <button onClick={showFun}>{mm[date.month-1]+" / "+date.year}</button>
     )
+    }
+    else{
+      return (
+        <button onClick={showFun}>{mm[date.month-1]+" / "+date.year}</button>
+      )
+    }
   }
 }
 

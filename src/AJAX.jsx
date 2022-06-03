@@ -26,17 +26,17 @@ async function sendGetRequest(url) {
 
 // send a POST request with data = [month,date]
 async function sendPostRequest(url,data) {
-  let params = {
-    method: 'POST', 
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data) };
-  
-  console.log("about to send POST request");
-  console.log(params);
-
-  let response = await fetch(url,params);
+  console.log(data)
+	const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+  });
   if (response.ok) {
     let data = await response.json();
+		console.log("Response looks like this: ",data)
     return data;
   } else {
     throw Error(response.status);
