@@ -1,62 +1,72 @@
+
 import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react';
 import MonthPicker from './MonthPicker';
+//import BarChart from './BarChart.jsx';
 import { sendPostRequest } from './AJAX.jsx'
 
 import { Bar } from "react-chartjs-2";
 import Chart from 'chart.js/auto';
 
 
-let tempM; 
-let tempY;
-
+//let tempM; 
+//let tempY;
+//let tempData = {};
+//let tempJ;
 function App() {
-  const [shown, setVisibility] = useState(false);	//Shown : Variable if shown, setVisibility() : Show if needed
-  const [date, setDate] = useState({year:2022, month:5});
-  //let dis = "show";
+  let tempM; 
+  let tempY;
+  let tempData;
+  let tempJ = {year:2022, month:1};
+  const [shown, setVisibility] = useState(false);	//Shown : Variable if shown, 
+  const [date, setDate] = useState(tempJ); //this line
+  const [dataValues, setDataValues] = useState([]);
+
+  async function datareq(){
+    tempData = await sendPostRequest("query/getCDECData", {"month":date.month, "year":date.year});
+    setDataValues(tempData);
+  }
+  
+  function newYear(y){
+    tempM = date.month;
+    tempJ = {year:y, month:tempM};
+    setDate(tempJ);
+    datareq();
+  }
+  function newMonth(m){
+    tempY = date.year;
+    tempJ = {year:tempY, month:m};
+    setDate(tempJ);
+    datareq();
+  }
+
 	async function showLower() {
 	  console.log("Button Clicked")
 		if(shown == true)//Currently Visible
 		{
+      console.log("Shown in true");
 			setVisibility(false);	//Make it invisible
-			console.log("Shown in true")
 		}
     else{	//Currently Invisible
-			setVisibility(true);	//Make it visible
 			console.log("Doing AJAX request");
-      // tempM = date.month;
       // tempY = date.year;
       // let t = {year:tempY, month:tempM};
-      // let waterData = await sendPostRequest("query/getCDECData", date);
-      //display the data with chart		
+      //let waterData = await sendPostRequest("query/getCDECData", {"month":date.month, "year":date.year});
+      //tempData = waterData;
+      datareq();
+      setVisibility(true);	//Make it visible
+			console.log(tempData)
+			setDataValues(tempData)
 		}
-  }
-  /*async function showLower() {
-	  console.log("Button Clicked")
-		if(shown == true)//Currently Visible
-		{
-      console.log()
-			setVisibility(false);	//Make it invisible
-			console.log("Shown in true")
-		}
-    else{	//Currently Invisible
-			setVisibility(true);	//Make it visible
-			// gettingRequest(month,date);	//Retrieve month-date from table
-			
-		}
-  }*/
-	// useEffect(gettingRequest)
-
-  function newYear(y){
-    setDate({year:y, month:(date.month)});
-  }
-  function newMonth(m){
-    setDate({year:(date.year), month:m});
   }
 
+  
 	return( //Change to shows upper and lower part
 		<main>
+			<div id="title">
+				Water storage in California reservoirs
+			</div>
 			<div id="alwaysShown">
 				<div id='colContent'>
       	<p id='upper text'>
@@ -78,45 +88,39 @@ function App() {
 			<div id="lowerPart" style={{ display: shown ? "block" : "none" }}>
 				<div id="chartSpace">
 					Chart Comes here
-          IDK about this : canvas id="myChart" width="400" height="400" canvas
-					<SchoolDisplay/>
+          <SchoolDisplay dates = {date} shown = {shown} dataValues = {dataValues}/>
 				</div>
 				<p id="lowerText">
 				Here's a quick look at some of the data on reservoirs from the <a href="https://cdec.water.ca.gov/index.html">California Data Exchange Center</a>, which consolidates climate and water data from multiple federal and state government agencies, and  electric utilities.  Select a month and year to see storage levels in the eleven largest in-state reservoirs.
 				</p>
+				<div id="changeMonth"> Change month:
+				</div>
         <MonthPicker date={date} yearFun={newYear} monthFun={newMonth} />
 			</div> 
     </main>
 		);
 }
 
-function SchoolDisplay() {
+function SchoolDisplay(props) {
 
-  console.log("in SchoolDisplay");
-
+  console.log("in SchoolDisplay with props : ",props);
+	const [dateChosen, setDate ] = useState({'month':props.month,"year":props.year})
+	
+	
   // static var will contain the list of schools
   const [schools, setSchools] = useState(false);
-
-  // call the custom fetch hook, passing it the callback functions that it can use
-	let month = 5;
-	let year = 2023;
-	sendPostRequest("query/getCDECData", {"month": month,"year":year});
-  
-
-  function thenFun (result) {
-    setSchools(result);
-    // render the list once we have it
-  }
-
-  function catchFun (error) {
-    console.log(error);
-  }
-
+	
+	useEffect(() => {
+  setSchools(true)
+	}, [dateChosen]);
+	
+	
+	
   // will re-render once state variable schools changes
   if (schools) {
   return (
     <main>
-      <SchoolChart schools={schools}> </SchoolChart>
+      <SchoolChart schools={schools} dataValues = {props.dataValues}> </SchoolChart>
     </main>
   )
   } else {
@@ -139,16 +143,19 @@ function SchoolChart(props) {
 	nicknames.set(6, 'Berryessa');
   
   if (props.schools) {
-    let n = props.schools.length;
-    console.log(props.schools);
+    let n = props.dataValues.length;
+    console.log(n);
+// HA,ORO,CLE,NML,SNL,DNP,BER
+		let volume = [4552000,3537577,2447650,2400000,2041000,2030000,1602000]
 
     // objects containing row values
-    let stickerObj = {label: "Total Volume",data: [], backgroundColor: ["cyan"]}
-    let midIncObj = {label: "Current Volume", data: [], backgroundColor: ["green"]}
+    let stickerObj = {label: "Total Volume",data: [], backgroundColor: ["rgb(66,145,152)"]}
+    let midIncObj = {label: "Current Volume", data: [], backgroundColor: ["rgb(120,199,227)"]}
     let labels = [];
     for (let i=0; i<n; i++) {
-      stickerObj.data.push(props.schools[i].sticker);
-      midIncObj.data.push(props.schools[i].midIncome);
+			console.log("The prop values : ",props.dataValues[i].value)
+      stickerObj.data.push(props.dataValues[i].value);
+      midIncObj.data.push(volume[i] - props.dataValues[i].value);
       labels.push(nicknames.get(i));
     }
   let userData = {};
@@ -160,7 +167,7 @@ let options = {
   plugins: {
     title: {
       display: false,
-      text: 'Sticker vs. Middle Income Family Prices',
+      text: 'Volume of Water Present',
     },
     tooltip: {
       enabled: true
@@ -174,14 +181,14 @@ let options = {
   scales: {
     x: {
       grid: {
-        display: false
+        display: true
       },
 			stacked:true
     },
     y: {
 			stacked:true,
       grid: {
-        display: false
+        display: true
       }
     }
   }

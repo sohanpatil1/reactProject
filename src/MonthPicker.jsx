@@ -39,21 +39,13 @@ function MonthPicker(props) {
           maxYear={2022}
           onChangeYear = {pickedYear}
           onChangeMonth = {pickedMonth}
-					onClick = {fetchData}
         />
       </div> );
   } 
   else {
-    if(date.month==10 || date.month==11 || date.month==12){
-      return (
+    return (
       <button onClick={showFun}>{mm[date.month-1]+" / "+date.year}</button>
     )
-    }
-    else{
-      return (
-        <button onClick={showFun}>{mm[date.month-1]+" / "+date.year}</button>
-      )
-    }
   }
 }
 
