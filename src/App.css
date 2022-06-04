@@ -1,14 +1,15 @@
-// add all CSS here!
-
 main {
   font-family: Inter;
 	font-size: 16px;
 	
 }
-#body{
-	margin-left: 130px;
+#entire{
+	margin-left: 150px;
 	margin-top: 70px;
-	margin-right: 130px;
+	margin-right: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 #title{
 	background-color: rgb(66,145,152);
@@ -27,22 +28,26 @@ main {
 	display:flex;
 	flex-direction: row;
 	justify-content: space-between;
+  flex-wrap: wrap-reverse;
+/*   gap: 5px; */
 }
+
 #colContent{
 	display: flex;
 	flex-direction: column;
-	width: 650px;
+	width: 58%;
 /* 	margin-right:65px; */
 }
 
 #imageContents{
 	display: flex;
 	flex-direction: column;
-	width: 393px;
+	width: 30%;
 	font: "Inter";
 	font-size:12px;
 }
 #imageCaptions{
+	margin-top: 15px;
 	width: 100%;
 	height: 100%;
 }
@@ -64,15 +69,16 @@ input#greenButton {
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
+/*   flex-wrap: wrap-reverse; */
 }
-div#lowerTextSection{
+#lowerTextSection{
 	display: flex;
 	flex-direction column;
 	justify-content: start;
 	align-items: start;
 	flex-wrap : wrap;
-/* 	margin-left: 210px; */
-	width:530px; 
+	margin-left: 210px;
+	width:100%; 
 }
 #lowerText{
 	margin-top:50px;
@@ -86,10 +92,11 @@ div#chart-container {
 }
 
 #changeMonth{
-	font-size 16px;
+	font-size: 16px;
 	font: Inter;
 	color: rgb(66,145,152);
 	font-weight: 600;
+	margin-top:10px;
 }
 #monthSelectButton{
 		width: 250px;
@@ -98,7 +105,7 @@ div#chart-container {
 		border: 1px solid gray;
 		color: gray;
 		text-indent: 20px; 
-		margin-top : 10px;
+		margin-top: 10px;
 }
 #monthData{
 	display: flex;
@@ -106,7 +113,15 @@ div#chart-container {
 	justify-content: start;
 	align-items: start;
 }
-@media (max-width: 1310px) {
+
+@media (max-width: 1330px) {
+  #title{
+    align-items: center;
+  }
+  #titleText{
+    margin-left: 70px;
+		
+  }
 	body{
 		display: flex;
 		flex-direction: column;
@@ -114,24 +129,143 @@ div#chart-container {
 		justify-content: center;
 	}
 	#entire{
-		margin-left: 100px;
-		margin-right: 100px;
+		margin-top: 50px;
+		margin-left: 50px;
+		margin-right: 50px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
   #alwaysShown{
+		display: flex;
+		flex-direction: column-reverse;
+    flex-wrap: wrap;
+		align-items: center;
+/* 		margin-top: 70px; */
+	}
+	#colContent{
+		width:80%;
+	}
+	#imageContents{
+		width:80%;
+		margin-bottom: 50px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	#imageCaptions{
+	margin-top: 15px;
+	width: 100%;
+	height: 100%;
+	display:flex;
+	align-items: center;
+	justify-content:center;
+	}
+	img{
+	width: 100%;
+	height: 100%;
+}
+	#lowerPart{
+		display: flex;
+		flex-direction: column-reverse ;
+		margin-top: 70px;
+		align-items: flex-start;
+		justify-content: start;
+	}
+	#chartSpace{
+		width:80%;
+		margin-top:140px;
+    justify-content: start;
+    align-items: flex-start;
+	}
+	divchart-container{
+		width:100%;
+		margin-left:0px;
+		margin-right:0px;
+		padding:0px;
+	}
+	
+	#lowerText{
+		width: 80%;
+    margin-bottom: 40px;
+    margin-top: 30px;
+	}
+	#monthSelectButton{
+		margin-top: 20px;
+		margin-left:0px;
+	}
+	div#lowerTextSection{
+		margin:0px;
+		display: flex;
+		flex-direction:column;
+		align-items:center;
+	}
+	#monthData{
+		display: flex;
+		flex-direction: column;
+		align-items:start;
+		justify-content:start;
+		width:80%;
+		
+	}
+}
+
+@media (max-width: 550px) {
+  #entire{
+    margin-left: 0px;
+	  margin-top: 60px;
+	  margin-right: 0px;
+  }
+  #title{
+    align-items: center;
+  }
+  #titleText{
+    margin-left: 80px;
+    margin-right: 60px;
+    inline-size: 330px;
+  }
+	body{
+    width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+	}
+	
+  #alwaysShown{
+    width: 100%;
 		display: flex;
 		flex-direction: column-reverse;
 		align-items: center;
 		margin-top: 70px;
 	}
 	#colContent{
-		width:100%;
+		max-width:60%;
 	}
 	#imageContents{
-		width:100%;
+		max-width:60%;
+		margin-bottom: 50px;
 	}
 	#lowerPart{
 		display: flex;
 		flex-direction: column-reverse ;
-		margin-top : 70px;
+		margin-top: 70px;
+		align-items: center;
+		justify-concent: space-between;
+	}
+	#chartSpace{
+		margin-right:0%;
+		margin-left:0%;
+/*     margin-right: 150px; */
+	}
+  
+	div#lowerTextSection{
+    max-width: 80%;
+    align-items: center;
+		margin-left:0px;
+	}
+	div#chart-container{
+		width:100%;
 	}
 }

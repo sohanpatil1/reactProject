@@ -148,14 +148,14 @@ function SchoolChart(props) {
     let midIncObj = {label: "Total Volume", data: [], backgroundColor: ["rgb(120,199,227)"]}
     let labels = [];
     for (let i=0; i<n; i++) {
-      stickerObj.data.push(props.dataValues[i].value);
+      stickerObj.data.push(props.dataValues[i].value/1000000);
 			let value=0;
 			if(props.dataValues[i].value > volume[i])
 				value = props.dataValues[i].value;
 			else{
 				value = volume[i] - props.dataValues[i].value;
 			}
-      midIncObj.data.push(value);
+      midIncObj.data.push(value/1000000);
 			// midIncObj.data.push(volume[i] - props.dataValues[i].value);
       labels.push(nicknames.get(i));
     }
