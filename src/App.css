@@ -176,16 +176,22 @@ div#chart-container {
 	#chartSpace{
 		width:80%;
 		margin-top:140px;
-    justify-content: start;
-    align-items: flex-start;
+
+    margin-right: 45vw;
+    margin-left: 20px;
 	}
+ 
 	divchart-container{
 		width:100%;
 		margin-left:0px;
 		margin-right:0px;
 		padding:0px;
 	}
-	
+	SchoolDisplay{
+    margin-left: 0px;
+    justify-content: flex-start;
+    margin-right: 80vw;
+  }
 	#lowerText{
 		width: 80%;
     margin-bottom: 40px;
