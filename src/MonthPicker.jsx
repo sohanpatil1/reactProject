@@ -4,8 +4,9 @@ import MonthYearPicker from 'react-month-year-picker';
 
 let mm = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 function MonthPicker(props) {
-  console.log("recieved");
   let date = props.date;
+  let y = date.year;
+  let m = date.month;
 
   const [visible,updateVisible] = useState(false);
 
@@ -14,12 +15,12 @@ function MonthPicker(props) {
   }
 
   function pickedYear (year) {
-    updateVisible(false);
+    //updateVisible(false);
     props.yearFun(year);
   }
 
   function pickedMonth (month) {
-    updateVisible(false);
+    //updateVisible(false);
     props.monthFun(month);
   }
 
@@ -40,11 +41,12 @@ function MonthPicker(props) {
           onChangeYear = {pickedYear}
           onChangeMonth = {pickedMonth}
         />
+        <input id='monthSelectButton' onClick={showFun} value={mm[m-1]+" "+y} disabled/>
       </div> );
   } 
   else {
     return (
-      <button onClick={showFun}>{mm[date.month-1]+" / "+date.year}</button>
+      <input id='monthSelectButton' onClick={showFun} value={mm[m-1]+" "+y}/>
     )
   }
 }

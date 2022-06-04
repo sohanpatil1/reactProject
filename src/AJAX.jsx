@@ -9,9 +9,6 @@ async function sendGetRequest(url) {
   let params = {
     method: 'GET', 
      };
-
-  console.log("about to send GET request");
-  console.log(params);
   
   let response = await fetch(url,params);
 	console.log(response)
@@ -26,7 +23,6 @@ async function sendGetRequest(url) {
 
 // send a POST request with data = [month,date]
 async function sendPostRequest(url,data) {
-  console.log(data)
 	const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -36,7 +32,6 @@ async function sendPostRequest(url,data) {
   });
   if (response.ok) {
     let data = await response.json();
-		console.log("Response looks like this: ",data)
     return data;
   } else {
     throw Error(response.status);
